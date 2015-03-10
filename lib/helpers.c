@@ -16,7 +16,7 @@ ssize_t read_(int fd, void *buf, size_t count)
 		}
 		else
 		{
-			count - total_count;
+			to_copy = count - total_count;
 		}
 
 		if (!to_copy)
