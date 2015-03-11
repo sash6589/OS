@@ -6,25 +6,10 @@ ssize_t read_(int fd, void *buf, size_t count)
 	ssize_t total_count = 0;
 	int cnt = 0;
 
-	while ((cnt = read(fd, help_buf, count)) > 0)
+	while ((cnt = read(fd, help_buf, count - total_count)) > 0)
 	{
-		int to_copy;
-		
-		if (cnt < count - total_count)
-		{
-			to_copy = cnt;
-		}
-		else
-		{
-			to_copy = count - total_count;
-		}
-
-		if (!to_copy)
-		{
-			break;
-		}
-		memcpy(buf + total_count, help_buf, to_copy);
-		total_count += to_copy;
+		memcpy(buf + total_count, help_buf, cnt);
+		total_count += cnt;
 	}
 
 	if (cnt == -1)
