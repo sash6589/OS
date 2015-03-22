@@ -1,18 +1,17 @@
 #include "helpers.h"
 
+
 ssize_t read_(int fd, void *buf, size_t count)
 {   
-    char help_buf[count];
     ssize_t total_count = 0;
     int cnt = 0;
 
-    while ((cnt = read(fd, help_buf, count - total_count)) > 0)
+    while ((cnt = read(fd, buf + total_count, count - total_count)) > 0)
     {
-        memcpy(buf + total_count, help_buf, cnt);
         total_count += cnt;
     }
 
-    if (cnt == -1)
+    if (cnt < -1)
     {
         return EXIT_FAILURE;
     }
@@ -69,5 +68,38 @@ ssize_t read_until(int fd, void * buf, size_t count, char delimiter)
     }
 
     return total_count; 
+}
+
+int spawn(const char * file, char * const argv[])
+{ 
+    pid_t pid = fork();
+    if (pid < 0)
+    {
+        return EXIT_FAILURE;
+    }
+    if (pid)
+    {
+        int return_status;
+        pid_t v = wait(&return_status);
+        if (v < 0)
+        {
+            return EXIT_FAILURE;
+        }
+        if (!(WIFEXITED(return_status)))
+        {
+            return EXIT_FAILURE;
+        }
+        else
+        {
+            return WEXITSTATUS(return_status);
+        }
+    }
+    else
+    {
+        if (execvp(file, argv) < 0)
+        {
+            return EXIT_FAILURE;
+        }
+    }
 }
 
