@@ -10,10 +10,10 @@ int to_front(char *buf, int to_move, int count)
     return count - to_move;
 }
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {   
 
-    char const *args[argc + 1];
+    char *args[argc + 1];
     int args_len = argc - 1;
     int i;
     for (i = 1; i < argc; ++i)
