@@ -1,3 +1,2 @@
-	
-all:
-	c99 -o revwords revwords.c -L ../lib -lhelpers -Wl,-rpath=../lib -I ../lib
+revwords: revwords.c
+	c99 -Wall revwords.c -o revwords -L ../lib -lhelpers -Wl,-rpath=../lib -I ../lib

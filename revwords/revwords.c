@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "helpers.h"
 
 #define BUF_SIZE 4100
