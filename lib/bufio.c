@@ -9,6 +9,7 @@ struct buf_t *buf_new(size_t capacity)
     ptr->capacity = capacity;
     ptr->size = 0;
     ptr->buf = (char *) malloc((sizeof(char))*capacity);
+    ptr->stop = 0;
 
     return ptr;
 }
@@ -112,3 +113,42 @@ ssize_t buf_flush(fd_t fd, struct buf_t *buf, size_t required)
     return total_count;
 }
 
+ssize_t buf_getline(int fd, struct buf_t *buf, char * dest) {
+    
+    #ifdef DEBUG
+    if (buf == NULL)
+    {
+        abort();
+    }
+    #endif
+
+    int i;
+    int length = 0;
+    int cnt;
+    while (1)
+    {
+        for (i = 0; i < buf->size; ++i)
+        {
+            if (buf->buf[i] == '\n') 
+            {
+                memmove(dest + length, buf->buf, i + 1);
+                buf->size = to_front(buf->buf, i + 1, buf->size);
+                return length + i + 1;
+            }
+        }
+        memmove(dest + length, buf->buf, buf->size);
+        buf->size = to_front(buf->buf, buf->size, buf->size);
+        length += buf->size;
+        cnt = buf_fill(fd, buf, 1);
+        if (cnt == 0)
+        {
+            buf->stop = 1;
+            break;
+        }
+    }
+    if (cnt < 0)
+    {
+        return -1;
+    }
+    return length;    
+}
