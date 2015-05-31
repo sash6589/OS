@@ -243,7 +243,6 @@ int runpiped(struct execargs_t** programs, size_t n)
                     exit(EXIT_FAILURE);
                 }
             }
-
             if (i < n - 1)
             {
                 if (dup2(fds[i][1], 1) == -1)
@@ -251,40 +250,16 @@ int runpiped(struct execargs_t** programs, size_t n)
                     exit(EXIT_FAILURE);
                 }
             }
-
-            for (int j = 0; j < n - 1; ++j)
-            {
-                if (j != i - 1)
-                {
-                    if (close(fds[j][0]) == -1)
-                    {
-                        exit(EXIT_FAILURE);
-                    }
-                }
-                if (j != i)
-                {
-                    if (close(fds[j][1]) == -1)
-                    {
-                        exit(EXIT_FAILURE);
-                    }
-                }
-            }
-
             struct sigaction other_sig_action;
             sigset_t other_sig_set;
             other_sig_init(&other_sig_action, &other_sig_set);
             sigaction(SIGPIPE, &other_sig_action, NULL);
             exec(programs[i]);
-            printf("%d\n", i);
         }
     }
 
-    while (1) {
-        if ((wait(NULL) == -1) && (errno == ECHILD))
-        {
-            break;
-        }
-    }
+    int return_status;
+    wait(&return_status);
 
     for (int i = 0; i < n - 1; ++i)
     {
