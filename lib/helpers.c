@@ -1,7 +1,10 @@
 #define _POSIX_SOURCE
+#define _GNU_SOURCE
 
 #include <string.h>
 #include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "helpers.h"
 
@@ -137,7 +140,7 @@ void kill_all()
     {
         if (pids[i] != -1)
         {
-            kill(pids[i], SIGKILL);
+            kill(pids[i], SIGTERM);
         }
     }
     n_pids = 0;
@@ -202,7 +205,7 @@ int runpiped(struct execargs_t** programs, size_t n)
     int fds[n - 1][2];
     for (int i = 0; i < n - 1; ++i)
     {
-        if (pipe(fds[i]) == -1)
+        if (pipe2(fds[i], O_CLOEXEC) == -1)
         {
             return EXIT_FAILURE;
         }
@@ -231,6 +234,7 @@ int runpiped(struct execargs_t** programs, size_t n)
 
         if (id)
         {
+
             pids[n_pids] = id;
             ++n_pids;
         }
@@ -258,9 +262,6 @@ int runpiped(struct execargs_t** programs, size_t n)
         }
     }
 
-    int return_status;
-    wait(&return_status);
-
     for (int i = 0; i < n - 1; ++i)
     {
         if (close(fds[i][0]) == -1)
@@ -270,6 +271,16 @@ int runpiped(struct execargs_t** programs, size_t n)
         if (close(fds[i][1]) == -1)
         {
             return EXIT_FAILURE;
+        }
+    }
+
+    
+    while (1)
+    {   
+        int return_status;
+        if ((wait(&return_status) < 0) && (errno == ECHILD))
+        {
+            break;
         }
     }
 
