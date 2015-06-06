@@ -5,4 +5,5 @@ all:
 	$(MAKE) -C filter
 	$(MAKE) -C bufcat
 	$(MAKE) -C foreach
-	$(MAKE) -C simplesh	
+	$(MAKE) -C simplesh
+	$(MAKE) -C filesender	
