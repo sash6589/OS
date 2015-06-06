@@ -43,7 +43,6 @@ void init_info(struct addrinfo *info)
     info->ai_socktype = SOCK_STREAM;
     info->ai_protocol = IPPROTO_TCP;
     info->ai_flags = AI_PASSIVE;
-    // ????
 }
 
 void start_server(int sfd)
