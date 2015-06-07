@@ -152,3 +152,8 @@ ssize_t buf_getline(int fd, struct buf_t *buf, char * dest) {
     }
     return length;    
 }
+
+void buf_set(struct buf_t *ptr, size_t n)
+{
+    ptr->size = n;
+}

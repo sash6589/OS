@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 
     freeaddrinfo(ans1);
 
-    if ((listen(sfd1, 1) < 0) || (listen(sfd2, 1)))
+    if ((listen(sfd1, 1) < 0) || (listen(sfd2, 1) < 0))
     {
         return EXIT_FAILURE;
     }

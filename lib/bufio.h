@@ -20,3 +20,4 @@ size_t buf_size(struct buf_t *);
 ssize_t buf_fill(fd_t fd, struct buf_t *buf, size_t required);
 ssize_t buf_flush(fd_t fd, struct buf_t *buf, size_t required);
 ssize_t buf_getline(int fd, struct buf_t *buf, char * dest);
+void buf_set(struct buf_t *ptr, size_t n);
