@@ -87,7 +87,7 @@ int check(int n, int i, int j)
 
             if (last == buf_size(buffs[n].tbuf1))
             {
-                buffs[n].flag1 = 2;
+                buffs[n].flag2 = 1;
                 shutdown(pollfds[i].fd, SHUT_RD);
             }
         }
@@ -218,8 +218,14 @@ void start_server(int sfd1, int sfd2)
 
                 if ((fd1 < 0) || (fd2 < 0))
                 {
-                    close(fd1);
-                    close(fd2);
+                    if (fd1 != -1)
+                    {
+                        close(fd1);
+                    }
+                    if (fd2 != -1)
+                    {
+                        close(fd2);
+                    }
                 }
                 else
                 {
@@ -335,3 +341,5 @@ int main(int argc, char *argv[])
     start_server(sfd1, sfd2);
 
 }
+
+
