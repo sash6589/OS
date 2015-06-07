@@ -7,3 +7,4 @@ all:
 	$(MAKE) -C foreach
 	$(MAKE) -C simplesh
 	$(MAKE) -C filesender	
+	$(MAKE) -C bipiper
